@@ -13,5 +13,20 @@ class ApiController extends Controller
         return response()->json($response, $statusCode);
     }
 
+    public function respondCreated($response = null): JsonResponse
+    {
+        return $this->respond($response, 201);
+    }
 
+    public function respondUpdated($response = null): JsonResponse
+    {
+        return $response ?
+            $this->respond($response, 201) :
+            $this->respond($response, 204);
+    }
+
+    public function respondDeleted(): JsonResponse
+    {
+        return $this->respond(null, 204);
+    }
 }

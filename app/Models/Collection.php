@@ -13,6 +13,8 @@ class Collection extends Model
 {
     use HasFactory, UsesUuids;
 
+    protected $fillable = ['title', 'art_url'];
+
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);

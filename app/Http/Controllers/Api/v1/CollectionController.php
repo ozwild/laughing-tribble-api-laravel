@@ -14,4 +14,10 @@ class CollectionController extends ApiController
         $collection->load(['tracks.collection', 'account']);
         return $this->respond($collection);
     }
+
+    public function update(Account $account, Collection $collection): JsonResponse
+    {
+        $collection->update(request()->all());
+        return $this->respondUpdated();
+    }
 }
