@@ -16,14 +16,14 @@ class AccountController extends ApiController
 
     public function tracks(): JsonResponse
     {
-        $tracks = Track::all();
+        $tracks = Track::orderByDesc('created_at')->get();
         $tracks->load(['collection']);
         return $this->respond($tracks);
     }
 
     public function collections(): JsonResponse
     {
-        $collections = Collection::all();
+        $collections = Collection::orderByDesc('created_at')->get();
         $collections->load(['tracks']);
         return $this->respond($collections);
     }

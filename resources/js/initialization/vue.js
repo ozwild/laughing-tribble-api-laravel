@@ -3,7 +3,7 @@ import Vue from 'vue';
 import './VueAddons'
 import '../components'
 
-const app = new Vue({
+new Vue({
     el: '#app',
 });
 

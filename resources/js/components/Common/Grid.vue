@@ -1,5 +1,5 @@
 <template>
-    <div :class="`six ${gridSize === 'one' ? 'column' : 'columns'}`">
+    <div :class="`${gridSize} ${gridSize === 'one' ? 'column' : 'columns'}`">
         <slot></slot>
     </div>
 </template>
@@ -9,7 +9,7 @@ export default {
     props: {
         size: {
             type: Number,
-            default: 1
+            default: 12
         }
     },
     computed: {

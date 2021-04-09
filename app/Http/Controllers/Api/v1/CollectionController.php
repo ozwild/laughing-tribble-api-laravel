@@ -10,9 +10,14 @@ class CollectionController extends ApiController
 {
     public function getOne(Account $account, Collection $collection): JsonResponse
     {
-
         $collection->load(['tracks.collection', 'account']);
         return $this->respond($collection);
+    }
+
+    public function store(Account $account): JsonResponse
+    {
+        $collection = $account->collections()->create(request()->all());
+        return $this->respondCreated($collection);
     }
 
     public function update(Account $account, Collection $collection): JsonResponse

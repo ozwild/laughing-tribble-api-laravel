@@ -35,6 +35,7 @@ Route::prefix('v1')
 
                 Route::get('{account}/collections', [AccountController::class, 'collections']);
 
+                Route::post('{account}/collections', [CollectionController::class, 'store']);
                 Route::get('{account}/collections/{collection}', [CollectionController::class, 'getOne']);
                 Route::patch('{account}/collections/{collection}', [CollectionController::class, 'update']);
 
