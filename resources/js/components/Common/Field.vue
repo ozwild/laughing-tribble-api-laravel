@@ -2,6 +2,7 @@
     <div>
         <label v-if="label" :for="id" v-html="label"></label>
         <input class="u-full-width"
+               :name="name"
                :type="type"
                :placeholder="placeholder"
                :id="id"
@@ -24,6 +25,10 @@ export default {
         id: {
             default: '',
             type: String
+        },
+        name: {
+            default: '',
+            type: String,
         },
         type: {
             default: 'text',

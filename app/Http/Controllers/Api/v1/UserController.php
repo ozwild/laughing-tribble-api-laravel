@@ -5,24 +5,20 @@ namespace App\Http\Controllers\Api\v1;
 use App\Models\Account;
 use App\Models\Collection;
 use App\Models\Track;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
-class AccountController extends ApiController
+class UserController extends ApiController
 {
-    public function getOne(Account $account): JsonResponse
+    public function getOne(User $user): JsonResponse
     {
-        return $this->respond($account);
+        $user->load(['accounts']);
+        return $this->respond($user);
     }
 
     public function tracks(): JsonResponse
     {
-
-        $query = Track::query();
-        if ($collectionId = request()->input('collectionId')) {
-            $query->where('collection_id', $collectionId);
-        }
-        $query->orderByDesc('created_at');
-        $tracks = $query->get();
+        $tracks = Track::orderByDesc('created_at')->get();
         $tracks->load(['collection']);
         return $this->respond($tracks);
     }

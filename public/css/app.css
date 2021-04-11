@@ -845,6 +845,21 @@ there.
 
 /*@import '~bootstrap/scss/bootstrap';*/
 
+body {
+  background: #222;
+}
+
+.row {
+  display: flex;
+}
+
+button.rounded {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 2px 14px;
+}
+
 .align-right {
   display: flex;
   justify-content: flex-end;
@@ -852,6 +867,10 @@ there.
 
 .ml-1 {
   margin-left: 0.5em;
+}
+
+.mr-1 {
+  margin-right: 0.5em;
 }
 
 .mt-2 {
@@ -868,6 +887,21 @@ there.
 
 .overflow-auto {
   overflow: auto;
+}
+
+input.multiselect__input {
+  border: none;
+}
+
+.collection-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.collection-selection img.option__image {
+  max-height: 24em;
+  max-width: 24em;
 }
 
 

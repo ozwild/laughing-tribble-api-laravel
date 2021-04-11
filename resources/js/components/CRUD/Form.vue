@@ -40,7 +40,7 @@ export default {
     },
     methods: {
         get() {
-            axios.get(`${this.url}/${this.id}`)
+            this.$http.get(`${this.url}/${this.id}`)
                 .then(({data}) => {
                     this.data = data;
                     this.ready = true;
@@ -57,12 +57,13 @@ export default {
 
         },
         store() {
-            axios.post(this.url, this.data)
-                .then(() => {
+            this.$http.post(this.url, this.data)
+                .then(({data}) => {
                     Vue.$toast.success('Cambios guardados!')
                     this.ready = false;
                     setTimeout(() => {
                         this.$emit('save')
+                        this.$emit('created', data)
                     }, 500)
                 })
                 .catch(() => {
@@ -70,12 +71,13 @@ export default {
                 })
         },
         update() {
-            axios.patch(`${this.url}/${this.id}`, this.data)
-                .then(() => {
+            this.$http.patch(`${this.url}/${this.id}`, this.data)
+                .then(({data}) => {
                     Vue.$toast.success('Cambios guardados!')
                     this.ready = false;
                     setTimeout(() => {
                         this.$emit('save')
+                        this.$emit('updated', data)
                     }, 500)
                 })
                 .catch(() => {
@@ -95,6 +97,7 @@ export default {
     background: rgba(0, 0, 0, 0.5);
     transition: opacity 0.4s;
     opacity: 0;
+    z-index: 500;
 }
 
 .crud-form > div {

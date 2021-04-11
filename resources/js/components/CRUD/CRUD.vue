@@ -33,7 +33,7 @@ export default {
         return {
             loading: false,
             invalid: false,
-            data: null,
+            data: [],
             listing: true,
             creating: false,
             editingId: null
@@ -49,9 +49,11 @@ export default {
     methods: {
         refresh() {
             this.loading = true;
-            return axios.get(this.url)
+            return this.$http.get(this.url)
                 .then(({data}) => {
                     this.data = data;
+                })
+                .finally(() => {
                     this.loading = false;
                 })
         },

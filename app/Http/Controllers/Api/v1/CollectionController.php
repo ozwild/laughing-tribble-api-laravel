@@ -23,6 +23,6 @@ class CollectionController extends ApiController
     public function update(Account $account, Collection $collection): JsonResponse
     {
         $collection->update(request()->all());
-        return $this->respondUpdated();
+        return $this->respondUpdated($collection);
     }
 }

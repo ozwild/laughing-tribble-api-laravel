@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Account;
 use App\Models\Collection;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class TestDataSeeder extends Seeder
@@ -17,6 +18,17 @@ class TestDataSeeder extends Seeder
     public function run()
     {
         $account = $this->createAccount();
+        $user = User::first();
+        $user->accounts()->attach($account->id);
+
+        /*$account2 = Account::create([
+            'name' => 'aalkdjsf',
+            'description' => 'aldkfjasdfasdf',
+            'avatar_url' => 'aasdif',
+            'country' => 'ES',
+        ]);
+        $user->accounts()->attach($account2->id);*/
+
         $this->createCollections($account);
     }
 

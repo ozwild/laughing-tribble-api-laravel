@@ -4,6 +4,8 @@
         :id="id"
         @cancel="()=>end()"
         @save="()=>end(true)"
+        @created="(collection)=>this.$emit('created', collection)"
+        @updated="(collection)=>this.$emit('updated', collection)"
     >
         <template v-slot="{data}">
             <row>

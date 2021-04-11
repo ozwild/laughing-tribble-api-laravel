@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\AccountController;
 use App\Http\Controllers\Api\v1\CollectionController;
 use App\Http\Controllers\Api\v1\TrackController;
+use App\Http\Controllers\Api\v1\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::prefix('v1')
     ->group(function () {
+
+        Route::prefix('users')
+            ->group(function () {
+
+                Route::get('{user}', [UserController::class, 'getOne']);
+
+            });
 
         Route::prefix('accounts')
             ->group(function () {
