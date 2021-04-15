@@ -27,9 +27,10 @@ class AccountController extends ApiController
         return $this->respond($tracks);
     }
 
-    public function collections(): JsonResponse
+    public function collections(Account $account): JsonResponse
     {
-        $collections = Collection::orderByDesc('created_at')->get();
+        $collections = $account->collections()->orderBy('title')->get();
+        /* $collections = Collection::orderByDesc('created_at')->get(); */
         $collections->load(['tracks']);
         return $this->respond($collections);
     }

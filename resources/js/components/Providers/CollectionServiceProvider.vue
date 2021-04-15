@@ -1,41 +1,68 @@
 <template>
-    <vue-simple-spinner v-if="loading"></vue-simple-spinner>
-    <div v-else>
-        <slot :collections="collections" :loading="loading"></slot>
+    <div>
+        <slot
+            :collections="collections.value"
+            :collection="collection"
+            :loading="loading"
+        ></slot>
     </div>
 </template>
 
 <script>
+import { inject, provide, reactive, readonly } from "vue";
 export default {
     name: "collection-service-provider",
-    props: ['account'],
+    setup() {
+        const account = inject("account");
+
+        const collections = reactive([]);
+        const collection = reactive({});
+
+        const setCollections = (v) => {
+            collections.value = v;
+        };
+
+        const setCollection = (v) => {
+            collection.value = v;
+        };
+
+        provide("collections", readonly(collections));
+        provide("setCollections", setCollections);
+        provide("collection", readonly(collection));
+        provide("setCollection", setCollection);
+
+        return {
+            account,
+            collections,
+            setCollections,
+            collection,
+            setCollection,
+        };
+    },
     data() {
         return {
-            collections: null,
-            collection: null,
-            loading: true
-        }
+            loading: false,
+        };
     },
     watch: {
-        account() {
-            const {account} = this;
-            if (account) {
+        "account.value": function (newValue, oldValue) {
+            if (newValue?.id !== oldValue?.id) {
                 this.get();
             }
-        }
+        },
     },
     methods: {
         get() {
-            this.$http.get(`accounts/${this.account.id}/collections`)
-                .then(({data}) => {
-                    this.collections = data;
+            this.loading = true;
+            this.$http
+                .get(`accounts/${this.account.value.id}/collections`)
+                .then(({ data }) => {
+                    this.setCollections(data);
                     this.loading = false;
-                })
-        }
-    }
-}
+                });
+        },
+    },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

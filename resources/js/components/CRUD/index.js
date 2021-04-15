@@ -1,9 +1,13 @@
-import Vue from 'vue'
+import Form from "./Form";
+import IndexTable from "./IndexTable";
+import CRUD from "./CRUD";
 
-import Form from './Form'
-import IndexTable from './IndexTable'
-import CRUD from './CRUD'
+Form.register = (app) => app.component(Form.name, Form);
+IndexTable.register = (app) => app.component(IndexTable.name, IndexTable);
+CRUD.register = (app) => app.component(CRUD.name, CRUD);
 
-Vue.component('ui-form', Form)
-Vue.component('ui-index-table', IndexTable)
-Vue.component('ui-crud', CRUD)
+export {
+    Form,
+    IndexTable,
+    CRUD,
+};

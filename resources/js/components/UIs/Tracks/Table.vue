@@ -1,22 +1,16 @@
 <template>
-    <ui-index-table :data="data">
-        <template v-slot:header>
-            <th>ID</th>
-            <th>Titulo</th>
-            <th>Coleccion</th>
-            <th></th>
-        </template>
-        <template v-slot:body="{row}">
-            <td v-html="row.id"></td>
-            <td v-html="row.title"></td>
-            <td v-html="row.collection_id"></td>
-            <td>
-                <button @click="edit(row.id)">
-                    <edit-2-icon size="1.25x"></edit-2-icon>
-                </button>
-            </td>
-        </template>
-    </ui-index-table>
+    <div class="track-table-wrapper">
+        <ui-index-table :data="data">
+            <template v-slot:body="{row}">
+                <td v-html="row.title"></td>
+                <td>
+                    <button @click="edit(row.id)">
+                        <edit-2-icon size="1.25x"></edit-2-icon>
+                    </button>
+                </td>
+            </template>
+        </ui-index-table>
+    </div>
 </template>
 
 <script>
@@ -30,5 +24,8 @@ export default {
 </script>
 
 <style scoped>
-
+.track-table-wrapper {
+    max-height: 30em;
+    overflow: auto;
+}
 </style>

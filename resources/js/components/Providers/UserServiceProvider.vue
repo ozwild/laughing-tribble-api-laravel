@@ -1,36 +1,46 @@
 <template>
-    <vue-simple-spinner v-if="loading"></vue-simple-spinner>
-    <div v-else>
+    <div>
         <slot :user="user" :loading="loading"></slot>
     </div>
 </template>
 
 <script>
+import { provide, reactive } from "vue";
 
 export default {
     name: "user-service-provider",
-    props: ['userId'],
-    data() {
-        return {
-            user: null,
-            loading: true
-        }
-    },
     mounted() {
         this.get();
     },
+    setup() {
+        const user = reactive({});
+
+        const updateUser = (v) => {
+            user.value = v;
+        };
+
+        provide("user", user);
+
+        return {
+            user,
+            updateUser,
+        };
+    },
+    props: ["userId"],
+    data() {
+        return {
+            loading: true,
+        };
+    },
     methods: {
         get() {
-            this.$http.get(`users/${this.userId}`)
-                .then(({data}) => {
-                    this.user = data;
-                    this.loading = false;
-                })
-        }
-    }
-}
+            this.$http.get(`users/${this.userId}`).then(({ data }) => {
+                this.updateUser(data);
+                this.loading = false;
+            });
+        },
+    },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

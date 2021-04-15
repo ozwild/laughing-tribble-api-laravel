@@ -1,5 +1,5 @@
 <template>
-    <form :class="`crud-form u-full-width ${ready?'loaded':''}`" v-else @submit.prevent="save()">
+    <form :class="`crud-form u-full-width ${ready?'loaded':''}`" @submit.prevent="save()">
         <container>
             <h5 v-html="formTitle"></h5>
             <slot :data="data"></slot>

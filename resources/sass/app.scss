@@ -1,21 +1,22 @@
 // Fonts
 /*@import url('https://fonts.googleapis.com/css?family=Nunito');*/
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons');
 
 // Variables
 @import 'variables';
 
-// Bootstrap
-/*@import '~bootstrap/scss/bootstrap';*/
+@import '~bootstrap';
 
-@import './normalize.css';
-@import './skeleton.css';
-
-
-body {
-    background: #222;
+html {
+    /*font-size: 8px;*/
 }
 
-.row {
+body {
+    /*background: #222;*/
+    /*line-height: 1;*/
+}
+
+/*.row {
     display: flex;
 }
 
@@ -53,11 +54,30 @@ button.rounded {
 
 .overflow-auto {
     overflow: auto;
+}*/
+
+#app {
+
+    .multiselect {
+        min-height: unset;
+        font-size: 1em;
+        line-height: 1;
+    }
+
+    .multiselect__select {
+        height: 2.5em;
+        width: 2.5em;
+    }
+
+    .multiselect, .multiselect__input, .multiselect__single {
+        font-size: 1em;
+    }
+
+    input.multiselect__input {
+        border: none;
+    }
 }
 
-input.multiselect__input {
-    border: none;
-}
 
 .collection-selection {
     display: flex;

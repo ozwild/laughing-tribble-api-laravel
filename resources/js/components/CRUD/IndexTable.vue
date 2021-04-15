@@ -1,14 +1,18 @@
 <template>
-  <div class="flex-table u-full-width overflow-auto">
-
-    <div class="flex-table-body u-full-width">
-      <row v-for="row in data">
-
-        <slot name="body" v-bind:row="row"></slot>
-
-      </row>
+    <div class="u-full-width overflow-auto">
+        <table class="u-full-width">
+            <thead>
+            <tr>
+                <slot name="header"></slot>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="row in data">
+                <slot name="body" v-bind:row="row"></slot>
+            </tr>
+            </tbody>
+        </table>
     </div>
-  </div>
 </template>
 <script>
 

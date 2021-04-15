@@ -1,8 +1,18 @@
-import Vue from 'vue'
-import './Common'
-import './CRUD'
-import './UIs'
+/* import VendorComponents from "./Vendor"; */
+import CommonComponents from "./Common";
+import ServiceProviders from "./Providers";
+import CRUDComponents from "./CRUD";
+import UIComponents from "./UIs";
+import App from "./App";
 
-import App from './App'
+App.register = (app) => app.component(App.name, App);
 
-Vue.component('app', App)
+export default Object.assign(
+    {},
+    /* VendorComponents, */
+    CommonComponents,
+    ServiceProviders,
+    CRUDComponents,
+    UIComponents,
+    { App }
+);

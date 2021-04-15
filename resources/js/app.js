@@ -1,2 +1,2 @@
-import './initialization/axios'
-import './initialization/vue'
+import "./bootstrap";
+import "./vue";

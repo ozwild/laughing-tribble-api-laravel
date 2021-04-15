@@ -21,13 +21,13 @@ class TestDataSeeder extends Seeder
         $user = User::first();
         $user->accounts()->attach($account->id);
 
-        /*$account2 = Account::create([
+        $account2 = Account::create([
             'name' => 'aalkdjsf',
             'description' => 'aldkfjasdfasdf',
             'avatar_url' => 'aasdif',
             'country' => 'ES',
         ]);
-        $user->accounts()->attach($account2->id);*/
+        $user->accounts()->attach($account2->id);
 
         $this->createCollections($account);
     }
