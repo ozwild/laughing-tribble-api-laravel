@@ -5,33 +5,53 @@
         <div
             :class="`jumbotron-content ${hasArt ? 'with-collection-art' : ''}`"
         >
-            <vue-select
-                v-if="collections.length > 1"
-                v-model="collectionId"
-                v-slot="{ option }"
-                :options="collections"
-                placeholder="Collection"
-                label="title"
-            >
-                <strong>{{ option.title }}</strong>
-            </vue-select>
-            <span
-                v-else-if="collection"
-                class="md-title"
-                v-html="collection.name"
-            ></span>
+            <container :fluid="true" class="mb-3">
+                <row>
+                    <column>
+                        <vue-select
+                            class="collection-selector"
+                            v-if="collections.length > 1"
+                            v-model="collectionId"
+                            v-slot="{ option }"
+                            :options="collections"
+                            label="title"
+                        >
+                            <strong>{{ option.title }}</strong>
+                        </vue-select>
+                        <button class="btn btn-dark ms-2">
+                            <vue-feather
+                                type="edit-2"
+                                size="16"
+                                title="Edit collection"
+                            ></vue-feather>
+                        </button>
+                        <button class="btn btn-dark ms-2">
+                            <vue-feather
+                                type="plus"
+                                size="16"
+                                title="Add collection"
+                            ></vue-feather>
+                        </button>
+                    </column>
+                </row>
+            </container>
+
+            <container :fluid="true">
+                <row>
+                    <column> </column>
+                </row>
+            </container>
         </div>
     </div>
 </template>
 
 <script>
 import { inject } from "vue";
-import VueSelect from "../../Common/Select";
 
 export default {
     name: "collection-bar",
     emits: ["update:modelValue"],
-    components: { VueSelect },
+    components: {},
     setup() {
         const appCollections = inject("collections", []);
         const appCollection = inject("collection", {});
@@ -51,12 +71,14 @@ export default {
         };
     },
     watch: {
-        "appCollection.value": function (newCollection) {
-            this.collection = newCollection;
-            this.collectionId = newCollection.id;
+        "appCollection.value": function (newValue) {
+            this.collection = newValue;
+            this.collectionId = newValue.id;
         },
-        "appCollections.value": function (newCollections) {
-            this.collections = newCollections;
+        "appCollections.value": function (newValue) {
+            this.collections = newValue;
+            const [firstCollection] = newValue;
+            if (firstCollection) this.collectionId = firstCollection.id;
         },
         collectionId(id) {
             const [collection] = this.collections.filter(
@@ -77,7 +99,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.btn {
+    line-height: 1;
+}
 .jumbotron {
     position: relative;
     padding: 2rem 1rem;
@@ -86,38 +111,61 @@ export default {
     overflow: hidden;
     min-height: 0em;
     transition: min-height 0.5s;
-}
-.jumbotron-content {
-    position: relative;
-    z-index: 10;
-}
-.with-collection {
-    min-height: 13em;
-}
-.with-collection-art {
-    margin-right: 14em;
-}
-.collection-background {
-    position: absolute;
-    width: 150%;
-    height: 100%;
-    top: 0%;
-    left: -46%;
-    background-size: contain;
-    background-repeat: repeat;
-    filter: blur(2px) saturate(0.5) brightness(0.5);
-    transform: scale(1.5);
-    z-index: 1;
-}
-.collection-art {
-    position: absolute;
-    width: 13em;
-    height: 13em;
-    top: 0%;
-    right: 0%;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    z-index: 5;
+    box-shadow: -2px 3px 16px -2px black;
+    z-index: 9;
+
+    &.with-collection {
+        min-height: 13em;
+
+        .collection-selector {
+            min-width: 15em;
+        }
+    }
+
+    .jumbotron-content {
+        position: relative;
+        z-index: 10;
+
+        &.with-collection-art {
+            margin-right: 14em;
+        }
+    }
+
+    .collection-background {
+        position: absolute;
+        width: 150%;
+        height: 100%;
+        top: 0%;
+        left: -46%;
+        background-size: contain;
+        filter: blur(9px) grayscale(0) brightness(1.5) contrast(0.45);
+        transform: scale(1.5);
+        z-index: 1;
+        box-shadow: inset 0 0 2em black, inset 0 0 4px white,
+            inset 0 0 7em purple;
+
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            box-shadow: inset 0px 0px 150px darkslateblue;
+        }
+    }
+    .collection-art {
+        position: absolute;
+        width: 13em;
+        height: 13em;
+        top: 0%;
+        right: 0%;
+        box-shadow: 0 0 10px 1px #222;
+        border: 1px solid white;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        z-index: 5;
+    }
 }
 </style>

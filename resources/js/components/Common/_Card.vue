@@ -1,6 +1,11 @@
 <template>
-    <div :class="`card elevation-${elevation}`" :style="`z-index: ${index}`">
-        <div class="card-content">
+    <div class="card" :style="`z-index: ${index}`">
+        <img v-if="imageSource" :src="imageSource" class="card-img-top" />
+        <div class="card-body">
+            <h5 v-if="title" class="card-title">{{ title }}</h5>
+            <h6 v-if="subtitle" class="card-subtitle mb-2 text-muted">
+                {{ subtitle }}
+            </h6>
             <slot></slot>
         </div>
     </div>
@@ -14,12 +19,20 @@ export default {
             type: Number,
             default: 1,
         },
-        elevation: {
-            type: Number,
-            default: 2
-        }
+        title: {
+            type: String,
+            default: null,
+        },
+        subtitle: {
+            type: String,
+            default: null,
+        },
+        imageSource: {
+            type: String,
+            default: null,
+        },
     },
-}
+};
 </script>
 
 <style scoped>

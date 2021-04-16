@@ -1,4 +1,4 @@
-/* import VendorComponents from "./Vendor"; */
+import VendorComponents from "./Vendor";
 import CommonComponents from "./Common";
 import ServiceProviders from "./Providers";
 import CRUDComponents from "./CRUD";
@@ -9,7 +9,7 @@ App.register = (app) => app.component(App.name, App);
 
 export default Object.assign(
     {},
-    /* VendorComponents, */
+    VendorComponents,
     CommonComponents,
     ServiceProviders,
     CRUDComponents,

@@ -13,9 +13,7 @@
                         v-if="localValue"
                         @click="edit(localValue.id)"
                         class="ml-1"
-                    >
-                        <edit-2-icon size="1.25x"></edit-2-icon>
-                    </button>
+                    ></button>
                 </row>
             </template>
 
@@ -45,7 +43,6 @@ import CollectionsIndexTable from "./Table";
 import CollectionsForm from "./Form";
 import { CRUD } from "../../CRUD";
 import { Row, Grid } from "../../Common";
-import { Edit2Icon } from "vue-feather-icons";
 
 export default {
     name: "collection-crud",
@@ -54,7 +51,6 @@ export default {
         CollectionsIndexTable,
         CollectionsForm,
         Table,
-        Edit2Icon,
         Row,
         CRUD,
     },

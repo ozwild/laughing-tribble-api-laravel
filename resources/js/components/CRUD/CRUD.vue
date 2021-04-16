@@ -5,16 +5,29 @@
         <div>
             <row>
                 <grid>
-                    <button class="button-primary u-pull-right" @click="creating = true">
-                        <plus-icon size="1x"></plus-icon>
-                    </button>
+                    <button
+                        class="button-primary u-pull-right"
+                        @click="creating = true"
+                    ></button>
                 </grid>
             </row>
             <row>
                 <grid>
-                    <slot name="listing" v-if="listing && !loading" :props="{url, data, edit}"></slot>
-                    <slot name="editing" v-if="editingId" :props="{url, editingId, refresh, end}"></slot>
-                    <slot name="creating" v-if="creating" :props="{url, refresh, end}"></slot>
+                    <slot
+                        name="listing"
+                        v-if="listing && !loading"
+                        :props="{ url, data, edit }"
+                    ></slot>
+                    <slot
+                        name="editing"
+                        v-if="editingId"
+                        :props="{ url, editingId, refresh, end }"
+                    ></slot>
+                    <slot
+                        name="creating"
+                        v-if="creating"
+                        :props="{ url, refresh, end }"
+                    ></slot>
                 </grid>
             </row>
         </div>
@@ -23,12 +36,11 @@
 
 <script>
 import axios from "axios";
-import {PlusIcon} from 'vue-feather-icons'
 
 export default {
     name: "ui-crud",
-    props: ['url'],
-    components: {PlusIcon},
+    props: ["url"],
+    components: {},
     data() {
         return {
             loading: false,
@@ -36,8 +48,8 @@ export default {
             data: [],
             listing: true,
             creating: false,
-            editingId: null
-        }
+            editingId: null,
+        };
     },
     mounted() {
         if (!this.url) {
@@ -49,13 +61,14 @@ export default {
     methods: {
         refresh() {
             this.loading = true;
-            return this.$http.get(this.url)
-                .then(({data}) => {
+            return this.$http
+                .get(this.url)
+                .then(({ data }) => {
                     this.data = data;
                 })
                 .finally(() => {
                     this.loading = false;
-                })
+                });
         },
         edit(id) {
             this.editingId = id;
@@ -63,13 +76,10 @@ export default {
         end(shouldRefresh = false) {
             this.editingId = null;
             this.creating = false;
-            if (shouldRefresh)
-                this.refresh();
-        }
-    }
-}
+            if (shouldRefresh) this.refresh();
+        },
+    },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

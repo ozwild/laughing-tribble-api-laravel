@@ -1,12 +1,10 @@
 <template>
     <div class="track-table-wrapper">
         <ui-index-table :data="data">
-            <template v-slot:body="{row}">
+            <template v-slot:body="{ row }">
                 <td v-html="row.title"></td>
                 <td>
-                    <button @click="edit(row.id)">
-                        <edit-2-icon size="1.25x"></edit-2-icon>
-                    </button>
+                    <button @click="edit(row.id)"></button>
                 </td>
             </template>
         </ui-index-table>
@@ -14,13 +12,11 @@
 </template>
 
 <script>
-import {Edit2Icon} from 'vue-feather-icons'
-
 export default {
     name: "tracks-index-table",
-    props: ['data', 'edit'],
-    components: {Edit2Icon}
-}
+    props: ["data", "edit"],
+    components: {},
+};
 </script>
 
 <style scoped>

@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-sm navbar-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Laughing Tribble</a>
             <button
@@ -21,6 +21,7 @@
                 </ul>
                 <div class="d-flex">
                     <vue-select
+                        class="text-light"
                         v-if="accounts.length > 1"
                         v-model="accountId"
                         v-slot="{ option }"
@@ -126,8 +127,17 @@ export default {
 </script>
 
 <style scoped>
-.multiselect {
-    display: inline-block;
-    width: auto;
+.navbar {
+    background: linear-gradient(
+        45deg,
+        black,
+        purple,
+        magenta,
+        orange,
+        purple,
+        transparent
+    );
+    filter: hue-rotate(0deg) saturate(0.15);
+    z-index: 10;
 }
 </style>
