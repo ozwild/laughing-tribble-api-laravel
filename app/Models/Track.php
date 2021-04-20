@@ -12,6 +12,8 @@ class Track extends Model
 {
     use HasFactory, UsesUuids;
 
+    protected $fillable = ['title', 'key', 'bpm', 'duration', 'lyrics', 'source', 'type','collection_id'];
+
     public function collection(): BelongsTo
     {
         return $this->belongsTo(Collection::class);

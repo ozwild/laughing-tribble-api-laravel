@@ -12,8 +12,8 @@ Object.keys(components).forEach((key) => {
     component.register(app);
 });
 
-plugins.forEach(({ plugin, options }) => {
-    app.use(plugin, options);
+plugins.forEach((plugin) => {
+    plugin.register(app);
 });
 
 app.mount("#app");

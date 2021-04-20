@@ -40,6 +40,7 @@ Route::prefix('v1')
                 Route::get('{account}/tracks', [AccountController::class, 'tracks']);
 
                 Route::get('{account}/tracks/{track}', [TrackController::class, 'getOne']);
+                Route::patch('{account}/tracks/{track}', [TrackController::class, 'update']);
 
                 Route::get('{account}/collections', [AccountController::class, 'collections']);
 

@@ -138,6 +138,6 @@ export default {
         transparent
     );
     filter: hue-rotate(0deg) saturate(0.15);
-    z-index: 10;
+    z-index: 1;
 }
 </style>

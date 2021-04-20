@@ -1,54 +1,55 @@
 <template>
     <div>
-        <label v-if="label" :for="id" v-html="label"></label>
-        <input class="u-full-width"
-               :name="name"
-               :type="type"
-               :placeholder="placeholder"
-               :id="id"
-               v-model="localValue"
+        <label v-if="label" class="form-label" :for="id" v-html="label"></label>
+        <input
+            class="form-control"
+            :name="name"
+            :type="type"
+            :placeholder="placeholder"
+            :id="id"
+            v-model="localValue"
         />
     </div>
 </template>
 
 <script>
 export default {
-    name: 'ui-field',
+    name: "ui-field",
     props: {
-        value: {
+        modelValue: {
             type: null,
         },
-        label:{
+        label: {
             default: null,
             type: String,
         },
         id: {
-            default: '',
-            type: String
+            default: "",
+            type: String,
         },
         name: {
-            default: '',
+            default: "",
             type: String,
         },
         type: {
-            default: 'text',
-            type: String
+            default: "text",
+            type: String,
         },
         placeholder: {
-            default: '',
-            type: String
-        }
+            default: "",
+            type: String,
+        },
     },
 
     computed: {
         localValue: {
             get() {
-                return this.value
+                return this.modelValue;
             },
             set(value) {
-                this.$emit('input', value)
-            }
-        }
-    }
-}
+                this.$emit("update:modelValue", value);
+            },
+        },
+    },
+};
 </script>

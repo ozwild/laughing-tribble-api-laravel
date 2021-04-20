@@ -9,7 +9,7 @@
                 <row>
                     <column>
                         <vue-select
-                            class="collection-selector"
+                            class="collection-selector mb-3"
                             v-if="collections.length > 1"
                             v-model="collectionId"
                             v-slot="{ option }"
@@ -112,13 +112,21 @@ export default {
     min-height: 0em;
     transition: min-height 0.5s;
     box-shadow: -2px 3px 16px -2px black;
-    z-index: 9;
+    z-index: 1;
+
+    @media (min-width: 576px) {
+        padding: 0.75rem 0.5rem;
+    }
 
     &.with-collection {
-        min-height: 13em;
+        min-height: 9em;
+        max-height: 9em;
+        height: 9em;
 
         .collection-selector {
-            min-width: 15em;
+            min-width: 10em;
+            max-width: 40vw;
+            width: 30%;
         }
     }
 
@@ -127,7 +135,9 @@ export default {
         z-index: 10;
 
         &.with-collection-art {
-            margin-right: 14em;
+            @media (min-width: 576px) {
+                margin-right: 13em;
+            }
         }
     }
 
@@ -138,7 +148,7 @@ export default {
         top: 0%;
         left: -46%;
         background-size: contain;
-        filter: blur(9px) grayscale(0) brightness(1.5) contrast(0.45);
+        filter: blur(2px) opacity(0.5) hue-rotate(205deg);
         transform: scale(1.5);
         z-index: 1;
         box-shadow: inset 0 0 2em black, inset 0 0 4px white,
@@ -158,7 +168,7 @@ export default {
         position: absolute;
         width: 13em;
         height: 13em;
-        top: 0%;
+        top: -25%;
         right: 0%;
         box-shadow: 0 0 10px 1px #222;
         border: 1px solid white;
@@ -166,6 +176,13 @@ export default {
         background-repeat: no-repeat;
         background-position: center;
         z-index: 5;
+
+        @media (max-width: 575px) {
+            top: 0%;
+            width: 100%;
+            height: 100%;
+            filter: blur(2px) opacity(0.5);
+        }
     }
 }
 </style>

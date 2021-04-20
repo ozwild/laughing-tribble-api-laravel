@@ -35,28 +35,14 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
     name: "ui-crud",
-    props: ["url"],
     components: {},
     data() {
         return {
-            loading: false,
-            invalid: false,
-            data: [],
-            listing: true,
             creating: false,
             editingId: null,
         };
-    },
-    mounted() {
-        if (!this.url) {
-            this.invalid = true;
-            return;
-        }
-        this.refresh();
     },
     methods: {
         refresh() {

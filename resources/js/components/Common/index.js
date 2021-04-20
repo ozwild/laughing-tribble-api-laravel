@@ -9,6 +9,7 @@ import Card from "./_Card";
 import FluidImage from "./FluidImage";
 import Select from "./_Select";
 import Badge from "./_Badge";
+import Form from "./_Form";
 
 Select.register = (app) => app.component(Select.name, Select);
 Spinner.register = (app) => app.component(Spinner.name, Spinner);
@@ -21,6 +22,7 @@ Table.register = (app) => app.component(Table.name, Table);
 Card.register = (app) => app.component(Card.name, Card);
 FluidImage.register = (app) => app.component(FluidImage.name, FluidImage);
 Badge.register = (app) => app.component(Badge.name, Badge);
+Form.register = (app) => app.component(Form.name, Form);
 
 export default {
     Select,
@@ -34,4 +36,5 @@ export default {
     Card,
     FluidImage,
     Badge,
+    Form,
 };

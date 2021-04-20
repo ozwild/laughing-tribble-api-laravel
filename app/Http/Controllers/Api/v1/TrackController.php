@@ -14,4 +14,9 @@ class TrackController extends ApiController
         $track->load(['collection']);
         return $this->respond($track);
     }
+
+    public function update(Account $account, Track $track):JsonResponse{
+        $track->update(request()->except('id'));
+        return $this->respond($track);
+    }
 }

@@ -1,11 +1,16 @@
 <template>
     <div>
-        <slot :tracks="tracks.value" :track="track.value" :loading="loading"></slot>
+        <slot
+            :tracks="tracks.value"
+            :track="track.value"
+            :loading="isLoadingTracks"
+        ></slot>
     </div>
 </template>
 
 <script>
-import { inject, reactive, readonly, provide } from "vue";
+import { inject, reactive, readonly, provide, ref, toRefs } from "vue";
+import axios from "axios";
 import debounce from "lodash/debounce";
 
 export default {
@@ -14,48 +19,71 @@ export default {
         const account = inject("account");
         const collection = inject("collection");
 
-        const tracks = reactive([]);
-        const track = reactive({});
-
-        const setTracks = (v) => {
-            tracks.value = v;
+        const refreshTrigger = ref(1);
+        const refresh = () => {
+            refreshTrigger.value++;
         };
 
-        const setTrack = (v) => {
-            track.value = v;
+        const createTrack = (d) => {
+            /* createTrackData.value = d; */
+            return Promise.resolve();
         };
 
-        provide("tracks", readonly(tracks));
-        provide("setTracks", setTracks);
-        provide("track", readonly(track));
-        provide("setTrack", setTrack);
+        const updateTrack = async (d) => {
+            return axios
+                .patch(`/api/v1/accounts/${account.value.id}/tracks/${d.id}`, d)
+                .then(({ data }) => {
+                    console.log("track updated", data);
+                    refresh();
+                    /* setTrack(data); */
+                });
+        };
+
+        const servicePayload = reactive({
+            tracks: [],
+            track: {},
+            isLoadingTracks: false,
+            refresh,
+            updateTrack,
+            setTracks(v) {
+                this.tracks = v;
+            },
+            setTrack(v) {
+                this.track = v;
+            },
+        });
+
+        provide("trackService", servicePayload);
+        provide("createTrack", createTrack);
+        /* provide("updateTrack", updateTrack); */
 
         return {
             account,
             collection,
-            tracks,
-            track,
-            setTracks,
-            setTrack,
+            refreshTrigger,
+            ...toRefs(servicePayload),
         };
     },
     data() {
         return {
-            deboucedGet: debounce(this.get, 800),
-            loading: true,
-            accountId: null,
+            debouncedGet: debounce(this.get, 250),
         };
     },
     watch: {
+        refreshTrigger(newValue, oldValue) {
+            console.log("refresh trigger", oldValue, newValue);
+            if (newValue !== oldValue) {
+                this.debouncedGet();
+            }
+        },
         "collection.value": function (newValue, oldValue) {
             if (newValue?.id !== oldValue?.id) {
-                this.get();
+                this.debouncedGet();
             }
         },
         "account.value": function (newValue, oldValue) {
             if (newValue?.id !== oldValue?.id) {
-                this.accountId = newValue.id;
-                this.get();
+                this.debouncedGet();
             }
         },
     },
@@ -68,13 +96,14 @@ export default {
                 ? `collectionId=${this.collection.value.id}`
                 : "";
 
+            this.isLoadingTracks = true;
             this.$http
                 .get(
                     `accounts/${this.account.value.id}/tracks?${collectionQuery}`
                 )
                 .then(({ data }) => {
                     this.setTracks(data);
-                    this.loading = false;
+                    this.isLoadingTracks = false;
                 });
         },
     },
