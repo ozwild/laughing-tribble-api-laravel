@@ -22,7 +22,7 @@ class CreateTracksTable extends Migration
             $table->string('bpm')->nullable();
             $table->integer('duration')->nullable();
             $table->text('lyrics')->nullable();
-            $table->enum('type', ['ORIGINAL', 'COVER', 'REMIX']);
+            $table->enum('type', ['ORIGINAL', 'COVER', 'REMIX'])->default('ORIGINAL');
 
             $table->uuid('collection_id')->nullable();
 

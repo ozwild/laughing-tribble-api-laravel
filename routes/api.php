@@ -37,16 +37,15 @@ Route::prefix('v1')
 
                 Route::get('{account}', [AccountController::class, 'getOne']);
 
-                Route::get('{account}/tracks', [AccountController::class, 'tracks']);
-
-                Route::get('{account}/tracks/{track}', [TrackController::class, 'getOne']);
-                Route::patch('{account}/tracks/{track}', [TrackController::class, 'update']);
-
                 Route::get('{account}/collections', [AccountController::class, 'collections']);
-
                 Route::post('{account}/collections', [CollectionController::class, 'store']);
                 Route::get('{account}/collections/{collection}', [CollectionController::class, 'getOne']);
                 Route::patch('{account}/collections/{collection}', [CollectionController::class, 'update']);
+
+                Route::get('{account}/tracks', [AccountController::class, 'tracks']);
+                Route::get('{account}/tracks/{track}', [TrackController::class, 'getOne']);
+                Route::post('{account}/collections/{collection}/tracks', [TrackController::class, 'create']);
+                Route::patch('{account}/collections/{collection}/tracks/{track}', [TrackController::class, 'update']);
 
 
             });

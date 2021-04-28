@@ -1,5 +1,5 @@
 <template>
-    <table class="table table-hover">
+    <table class="table">
         <thead>
             <tr>
                 <slot name="header"></slot>

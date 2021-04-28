@@ -10,9 +10,7 @@
                             <container>
                                 <row>
                                     <column>
-                                        <card>
-                                            <track-crud></track-crud>
-                                        </card>
+                                        <track-crud></track-crud>
                                     </column>
                                 </row>
                             </container>

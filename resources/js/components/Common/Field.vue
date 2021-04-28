@@ -1,15 +1,14 @@
 <template>
-    <div>
-        <label v-if="label" class="form-label" :for="id" v-html="label"></label>
-        <input
-            class="form-control"
-            :name="name"
-            :type="type"
-            :placeholder="placeholder"
-            :id="id"
-            v-model="localValue"
-        />
-    </div>
+    <label v-if="label" class="form-label" :for="id" v-html="label"></label>
+    <input
+        v-bind="$attrs"
+        class="form-control"
+        :name="name"
+        :type="type"
+        :placeholder="placeholder"
+        :id="id"
+        v-model="localValue"
+    />
 </template>
 
 <script>

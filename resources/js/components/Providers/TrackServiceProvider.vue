@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { inject, reactive, readonly, provide, ref, toRefs } from "vue";
+import {inject, reactive, readonly, provide, ref, toRefs} from "vue";
 import axios from "axios";
 import debounce from "lodash/debounce";
 
@@ -24,19 +24,31 @@ export default {
             refreshTrigger.value++;
         };
 
-        const createTrack = (d) => {
-            /* createTrackData.value = d; */
-            return Promise.resolve();
+        const createTrack = (formData) => {
+            return axios({
+                method: "post",
+                url: `/api/v1/accounts/${account.value.id}/collections/${collection.value.id}/tracks`,
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                data: formData,
+            }).then(() => {
+                refresh();
+            });
         };
 
-        const updateTrack = async (d) => {
-            return axios
-                .patch(`/api/v1/accounts/${account.value.id}/tracks/${d.id}`, d)
-                .then(({ data }) => {
-                    console.log("track updated", data);
-                    refresh();
-                    /* setTrack(data); */
-                });
+        const updateTrack = async (track, formData) => {
+            formData.append("_method", "patch");
+            return axios({
+                method: "post",
+                url: `/api/v1/accounts/${account.value.id}/collections/${collection.value.id}/tracks/${track.id}`,
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                data: formData,
+            }).then(() => {
+                refresh();
+            });
         };
 
         const servicePayload = reactive({
@@ -44,6 +56,7 @@ export default {
             track: {},
             isLoadingTracks: false,
             refresh,
+            createTrack,
             updateTrack,
             setTracks(v) {
                 this.tracks = v;
@@ -54,8 +67,6 @@ export default {
         });
 
         provide("trackService", servicePayload);
-        provide("createTrack", createTrack);
-        /* provide("updateTrack", updateTrack); */
 
         return {
             account,
@@ -101,7 +112,7 @@ export default {
                 .get(
                     `accounts/${this.account.value.id}/tracks?${collectionQuery}`
                 )
-                .then(({ data }) => {
+                .then(({data}) => {
                     this.setTracks(data);
                     this.isLoadingTracks = false;
                 });

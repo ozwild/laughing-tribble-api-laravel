@@ -1,22 +1,25 @@
 <template>
     <form
         :class="`crud-form ${ready ? 'loaded' : ''}`"
-        @submit.prevent="save()"
+        @submit.prevent="save"
+        enctype="multipart/form-data"
     >
-        <container class="form-container">
-            <h5 v-html="formTitle"></h5>
-            <slot :data="formData"></slot>
+        <container class="form-container text-white bg-dark">
+            <slot :data="formData" :addFile="setFile"></slot>
             <separator size="lg"></separator>
             <row>
-                <column class="align-right">
+                <div v-if="loading">
+                    <spinner></spinner>
+                </div>
+                <column class="text-end" v-else>
                     <input
-                        class="btn"
+                        class="btn btn-outline-secondary me-2"
                         type="button"
                         @click="cancel()"
                         value="Cancelar"
                     />
                     <input
-                        class="btn btn-primary ml-1"
+                        class="btn btn-primary"
                         type="submit"
                         value="Submit"
                     />
@@ -29,29 +32,29 @@
 <script>
 export default {
     name: "ui-form",
-    props: ["data", "id", "title"],
+    props: ["loading", "data", "id", "title"],
     data() {
         return {
             ready: false,
             formData: {},
+            file: null,
         };
     },
     mounted() {
         if (this.data) {
-            this.formData = { ...this.data };
+            this.formData = {...this.data};
         }
         setTimeout(() => {
             this.ready = true;
         }, 400);
     },
-    computed: {
-        formTitle() {
-            return this.formData.id ? "Editando" : "Añadiendo";
-        },
-    },
     methods: {
-        save() {
-            this.$emit("save", this.formData);
+        setFile(file) {
+            this.file = file;
+        },
+        save(event) {
+            const formData = new FormData(event.srcElement);
+            this.$emit("save", formData);
         },
         cancel() {
             this.ready = false;
@@ -73,6 +76,9 @@ export default {
     transition: opacity 0.4s;
     opacity: 0;
     z-index: 500;
+    max-height: 100%;
+    max-width: 100%;
+    overflow: auto;
 
     &.loaded {
         transition: opacity 0.4s;

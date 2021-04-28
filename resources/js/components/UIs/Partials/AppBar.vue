@@ -138,6 +138,7 @@ export default {
         transparent
     );
     filter: hue-rotate(0deg) saturate(0.15);
-    z-index: 1;
+    z-index: 2;
+    box-shadow: 0 0 8px -2px;
 }
 </style>

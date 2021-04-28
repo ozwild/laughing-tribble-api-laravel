@@ -1,5 +1,9 @@
 <template>
-    <ui-form :data="track" v-slot="{ data }">
+    <ui-form :data="track" v-slot="{ data }" :loading="loading">
+        <p class="lead">
+            {{ track ? "Editando" : "Creando" }} <strong>{{ data.title }}</strong>
+        </p>
+
         <fieldset>
             <container :fluid="true">
                 <row>
@@ -7,32 +11,38 @@
                         <ui-field
                             v-model="data.title"
                             id="title-field"
-                            placeholder="Title..."
-                            label="Title"
+                            placeholder="Titulo..."
+                            label="Titulo"
+                            name="title"
                         ></ui-field>
                     </column>
                     <column :size="12" :md="6" class="mb-3">
                         <ui-field
-                            v-model="data.source"
                             id="source-field"
-                            placeholder="Fuente (URL)..."
-                            label="Fuente (URL)"
+                            type="file"
+                            placeholder="Fuente (audio)"
+                            label="Fuente (audio)"
+                            name="file"
+                            accept="audio/mpeg"
                         ></ui-field>
                     </column>
                     <column :size="12" :md="6" class="mb-3">
                         <ui-field
                             v-model="data.key"
                             id="key-field"
-                            placeholder="Key..."
-                            label="Key"
+                            placeholder="Tonalidad..."
+                            label="Tonalidad"
+                            name="key"
                         ></ui-field>
                     </column>
                     <column :size="12" :md="6" class="mb-3">
                         <ui-field
                             v-model="data.bpm"
                             id="bpm-field"
-                            placeholder="BPM..."
-                            label="BPM"
+                            type="number"
+                            placeholder="Tempo..."
+                            label="Tempo"
+                            name="key"
                         ></ui-field>
                     </column>
                     <column :size="12" :md="6" class="mb-3">
@@ -42,6 +52,7 @@
                             id="duration-field"
                             placeholder="Duracion..."
                             label="Duracion"
+                            name="duration"
                         ></ui-field>
                     </column>
                     <column :size="12" :md="6" class="mb-3">
@@ -50,14 +61,7 @@
                             id="type-field"
                             placeholder="Tipo..."
                             label="Tipo"
-                        ></ui-field>
-                    </column>
-                    <column :size="12" :md="6" class="mb-3">
-                        <ui-field
-                            v-model="data.collection_id"
-                            id="collection-field"
-                            placeholder="Coleccion..."
-                            label="Coleccion"
+                            name="type"
                         ></ui-field>
                     </column>
                 </row>
@@ -69,11 +73,7 @@
 <script>
 export default {
     name: "tracks-form",
-    props: ["track"],
-    components: {},
-    data() {
-        return {};
-    },
+    props: ["track", "loading"],
 };
 </script>
 

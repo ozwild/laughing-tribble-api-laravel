@@ -1,8 +1,8 @@
 <template>
     <div>
         <button
-            class="btn btn-dark ms-2 float-end"
-            @click="trackService.refresh()"
+            class="btn btn-light ms-2 float-end"
+            @click="creating"
         >
             <vue-feather
                 type="plus"
@@ -11,6 +11,7 @@
             ></vue-feather>
         </button>
         <tracks-table
+            class="table-dark table-striped"
             :data="trackService.tracks"
             :edit="updating"
             :loading="trackService.isLoadingTracks"
@@ -18,41 +19,39 @@
         <tracks-form
             v-if="isUpdating && editingTrack"
             :track="editingTrack"
+            :loading="isSubmitting"
             @cancel="cancel"
             @save="update"
         ></tracks-form>
-        <!-- <tracks-form
+        <tracks-form
             v-if="isCreating"
+            :loading="isSubmitting"
             @cancel="cancel"
             @save="create"
-        ></tracks-form> -->
+        ></tracks-form>
     </div>
 </template>
 
 <script>
-import { inject } from "vue";
+import {inject} from "vue";
 import TracksTable from "./Table";
 import TracksForm from "./Form";
 
 export default {
     name: "track-crud",
     props: ["url"],
-    components: { TracksTable, TracksForm },
+    components: {TracksTable, TracksForm},
     setup() {
-        /* const updateTrack = inject("updateTrack"); */
-        const createTrack = inject("createTrack");
         const trackService = inject("trackService");
 
         return {
             trackService,
-            /* updateTrack, */
-            createTrack,
         };
     },
     data() {
         return {
-            /* tracks: this.appTracks, */
             editingTrack: null,
+            isSubmitting: false,
             isUpdating: false,
             editingId: null,
             isCreating: false,
@@ -64,30 +63,43 @@ export default {
             this.isCreating = true;
         },
         updating(d) {
-            console.log("updating", d);
             this.editingTrack = d;
-            /* this.setTrack(d); */
             this.isUpdating = true;
-            /* this.editingId = d.id; */
         },
-        create(d) {
-            console.log("creating");
-            this.createTrack(d).then(() => {
-                this.isCreating = false;
-            });
+        create(formData) {
+            this.isSubmitting = true;
+            this.trackService
+                .createTrack(formData)
+                .then(() => {
+                    this.isCreating = false;
+                })
+                .catch((response) => {
+                    this.$toast.error(`Something went wrong. ${response.message}`);
+                })
+                .finally(() => {
+                    this.isSubmitting = false;
+                });
+
         },
-        update(d) {
-            console.log("update", d);
-            this.trackService.updateTrack(d).then(() => {
-                this.isUpdating = false;
-                /* this.editingId = null; */
-            });
+        update(formData) {
+            this.isSubmitting = true;
+            this.trackService
+                .updateTrack(this.editingTrack, formData)
+                .then(() => {
+                    this.isUpdating = false;
+                    this.editingTrack = null;
+                })
+                .catch((response) => {
+                    this.$toast.error(`Something went wrong. ${response.message}`);
+                })
+                .finally(() => {
+                    this.isSubmitting = false;
+                });
         },
         cancel() {
-            console.log("cancelling form");
             this.isCreating = false;
             this.isUpdating = false;
-            /* this.editingId = null; */
+            this.editingTrack = null;
         },
     },
 };
