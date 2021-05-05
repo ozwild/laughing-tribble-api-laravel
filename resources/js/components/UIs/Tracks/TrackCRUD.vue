@@ -53,7 +53,6 @@ export default {
             editingTrack: null,
             isSubmitting: false,
             isUpdating: false,
-            editingId: null,
             isCreating: false,
         };
     },

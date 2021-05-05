@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import {inject, reactive, readonly, provide, ref, toRefs} from "vue";
+import { inject, reactive, readonly, provide, ref, toRefs } from "vue";
 import axios from "axios";
 import debounce from "lodash/debounce";
 
@@ -17,6 +17,7 @@ export default {
     name: "track-service-provider",
     setup() {
         const account = inject("account");
+        const collectionService = inject("collectionService", {});
         const collection = inject("collection");
 
         const refreshTrigger = ref(1);
@@ -72,6 +73,7 @@ export default {
             account,
             collection,
             refreshTrigger,
+            collectionService,
             ...toRefs(servicePayload),
         };
     },
@@ -82,12 +84,11 @@ export default {
     },
     watch: {
         refreshTrigger(newValue, oldValue) {
-            console.log("refresh trigger", oldValue, newValue);
             if (newValue !== oldValue) {
                 this.debouncedGet();
             }
         },
-        "collection.value": function (newValue, oldValue) {
+        "collectionService.collection": function (newValue, oldValue) {
             if (newValue?.id !== oldValue?.id) {
                 this.debouncedGet();
             }
@@ -100,11 +101,12 @@ export default {
     },
     methods: {
         get() {
-            if (!this.account.value || !this.collection.value) {
+            if (!this.account.value || !this.collectionService.collection) {
                 return;
             }
-            const collectionQuery = this.collection.value
-                ? `collectionId=${this.collection.value.id}`
+            const collection = this.collectionService.collection;
+            const collectionQuery = collection.id
+                ? `collectionId=${collection.id}`
                 : "";
 
             this.isLoadingTracks = true;
@@ -112,7 +114,7 @@ export default {
                 .get(
                     `accounts/${this.account.value.id}/tracks?${collectionQuery}`
                 )
-                .then(({data}) => {
+                .then(({ data }) => {
                     this.setTracks(data);
                     this.isLoadingTracks = false;
                 });

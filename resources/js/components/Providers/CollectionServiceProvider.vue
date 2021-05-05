@@ -1,50 +1,94 @@
 <template>
     <div>
         <slot
-            :collections="collections.value"
+            :collections="collections"
             :collection="collection"
-            :loading="loading"
+            :loading="isLoadingCollections"
         ></slot>
     </div>
 </template>
 
 <script>
-import { inject, provide, reactive, readonly } from "vue";
+import { inject, provide, reactive, ref, toRefs, readonly } from "vue";
+import axios from "axios";
 export default {
     name: "collection-service-provider",
     setup() {
         const account = inject("account");
-
-        const collections = reactive([]);
-        const collection = reactive({});
-
-        const setCollections = (v) => {
-            collections.value = v;
+        const refreshTrigger = ref(1);
+        const refresh = () => {
+            refreshTrigger.value++;
         };
 
-        const setCollection = (v) => {
-            collection.value = v;
+        const createCollection = (formData) => {
+            return axios({
+                method: "post",
+                url: `/api/v1/accounts/${account.value.id}/collections`,
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                data: formData,
+            }).then(() => {
+                refresh();
+            });
         };
 
-        provide("collections", readonly(collections));
-        provide("setCollections", setCollections);
-        provide("collection", readonly(collection));
-        provide("setCollection", setCollection);
+        const updateCollection = async (collection, formData) => {
+            formData.append("_method", "patch");
+            return axios({
+                method: "post",
+                url: `/api/v1/accounts/${account.value.id}/collections/${collection.id}`,
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                data: formData,
+            }).then(() => {
+                refresh();
+            });
+        };
+
+        const servicePayload = reactive({
+            collections: [],
+            collection: {},
+            isLoadingCollections: false,
+            refresh,
+            createCollection,
+            updateCollection,
+            setCollections(v) {
+                this.collections = v;
+            },
+            setCollectionById(id) {
+                const [collection] = this.collections.filter(
+                    (c) => (c.id === id)
+                );
+
+                if (collection) {
+                    this.collection = collection;
+                }
+            },
+            setCollection(v) {
+                this.collection = v;
+            },
+        });
+
+        provide("collection", readonly(servicePayload.collection));
+        provide("collectionService", servicePayload);
 
         return {
             account,
-            collections,
-            setCollections,
-            collection,
-            setCollection,
+            refreshTrigger,
+            ...toRefs(servicePayload),
         };
     },
     data() {
-        return {
-            loading: false,
-        };
+        return {};
     },
     watch: {
+        refreshTrigger(newValue, oldValue) {
+            if (newValue !== oldValue) {
+                this.get();
+            }
+        },
         "account.value": function (newValue, oldValue) {
             if (newValue?.id !== oldValue?.id) {
                 this.get();
@@ -53,12 +97,13 @@ export default {
     },
     methods: {
         get() {
-            this.loading = true;
+            const accountId = this.account.value.id;
+            this.isLoadingCollections = true;
             this.$http
-                .get(`accounts/${this.account.value.id}/collections`)
+                .get(`accounts/${accountId}/collections`)
                 .then(({ data }) => {
                     this.setCollections(data);
-                    this.loading = false;
+                    this.isLoadingCollections = true;
                 });
         },
     },

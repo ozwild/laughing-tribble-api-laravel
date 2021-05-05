@@ -1,31 +1,39 @@
 <template>
-    <div :class="`jumbotron ${collection ? 'with-collection' : ''}`">
+    <div
+        :class="`jumbotron ${
+            collectionService.collection ? 'with-collection' : ''
+        }`"
+    >
         <div class="collection-background" :style="{ backgroundImage }"></div>
         <div class="collection-art" :style="{ backgroundImage }"></div>
         <div
             :class="`jumbotron-content ${hasArt ? 'with-collection-art' : ''}`"
         >
-            <container :fluid="true" class="mb-3">
+            <container
+                :fluid="true"
+                class="mb-3"
+                v-if="collectionService.collections"
+            >
                 <row>
                     <column>
                         <vue-select
                             class="collection-selector mb-3"
-                            v-if="collections.length > 1"
-                            v-model="collectionId"
-                            v-slot="{ option }"
-                            :options="collections"
+                            v-if="collectionService.collections.length > 1"
+                            :modelValue="collectionService.collection.id"
+                            :options="collectionService.collections"
+                            @update:modelValue="changeOfSelection"
                             label="title"
                         >
                             <strong>{{ option.title }}</strong>
                         </vue-select>
-                        <button class="btn btn-dark ms-2">
+                        <button class="btn btn-dark ms-2" @click="updating">
                             <vue-feather
                                 type="edit-2"
                                 size="16"
                                 title="Edit collection"
                             ></vue-feather>
                         </button>
-                        <button class="btn btn-dark ms-2">
+                        <button class="btn btn-dark ms-2" @click="creating">
                             <vue-feather
                                 type="plus"
                                 size="16"
@@ -38,7 +46,21 @@
 
             <container :fluid="true">
                 <row>
-                    <column> </column>
+                    <column>
+                        <collections-form
+                            v-if="isUpdating && editingCollection"
+                            :collection="editingCollection"
+                            :loading="isSubmitting"
+                            @cancel="cancel"
+                            @save="update"
+                        ></collections-form>
+                        <collections-form
+                            v-if="isCreating"
+                            :loading="isSubmitting"
+                            @cancel="cancel"
+                            @save="create"
+                        ></collections-form>
+                    </column>
                 </row>
             </container>
         </div>
@@ -47,55 +69,115 @@
 
 <script>
 import { inject } from "vue";
+import CollectionsForm from "../Collections/Form";
 
 export default {
     name: "collection-bar",
     emits: ["update:modelValue"],
-    components: {},
+    components: { CollectionsForm },
     setup() {
-        const appCollections = inject("collections", []);
-        const appCollection = inject("collection", {});
-        const setCollection = inject("setCollection");
-
+        const collectionService = inject("collectionService", {});
         return {
-            appCollections,
-            appCollection,
-            setCollection,
+            collectionService,
         };
     },
     data() {
         return {
-            collectionId: null,
-            collections: [],
-            collection: null,
+            editingCollection: null,
+            isSubmitting: false,
+            isUpdating: false,
+            editingId: null,
+            isCreating: false,
         };
     },
     watch: {
-        "appCollection.value": function (newValue) {
-            this.collection = newValue;
-            this.collectionId = newValue.id;
-        },
-        "appCollections.value": function (newValue) {
-            this.collections = newValue;
+        "collectionService.collections": function (newValue) {
+            if (!this.collectionService) {
+                return;
+            }
+            const { collection: currentCollection } = this.collectionService;
             const [firstCollection] = newValue;
-            if (firstCollection) this.collectionId = firstCollection.id;
-        },
-        collectionId(id) {
-            const [collection] = this.collections.filter(
-                (option) => option.id === id
-            );
-            if (collection) this.setCollection(collection);
+            if (firstCollection) {
+                if (
+                    !currentCollection ||
+                    !this.collectionService?.collections?.includes(
+                        currentCollection
+                    )
+                ) {
+                    this.collectionService.setCollection(firstCollection);
+                }
+            }
         },
     },
     computed: {
         backgroundImage() {
-            return this.hasArt ? `url(${this.collection.art_url})` : "";
+            if (!this.collectionService) {
+                return "";
+            }
+            const { collection } = this.collectionService;
+            return this.hasArt ? `url(${collection.art_url})` : "";
         },
         hasArt() {
-            return this.collection && this.collection.art_url;
+            if (!this.collectionService) {
+                return false;
+            }
+            const { collection } = this.collectionService;
+            return collection && collection.art_url;
         },
     },
-    methods: {},
+    methods: {
+        changeOfSelection(collectionId) {
+            this.collectionService.setCollectionById(collectionId);
+        },
+        creating() {
+            this.isCreating = true;
+        },
+        updating() {
+            const { collection } = this.collectionService;
+            this.editingCollection = collection;
+            this.isUpdating = true;
+        },
+        create(formData) {
+            console.log(formData);
+            this.isSubmitting = true;
+            this.collectionService
+                .createCollection(formData)
+                .then(() => {
+                    this.isCreating = false;
+                })
+                .catch((response) => {
+                    this.$toast.error(
+                        `Something went wrong. ${response.message}`
+                    );
+                })
+                .finally(() => {
+                    this.isSubmitting = false;
+                });
+        },
+        update(formData) {
+            console.log(formData);
+            this.isSubmitting = true;
+            this.collectionService
+                .updateCollection(this.editingCollection, formData)
+                .then(() => {
+                    this.isUpdating = false;
+                    this.editingCollection = null;
+                })
+                .catch((response) => {
+                    this.$toast.error(
+                        `Something went wrong. ${response.message}`
+                    );
+                })
+                .finally(() => {
+                    this.isSubmitting = false;
+                });
+        },
+        cancel() {
+            this.isCreating = false;
+            this.isUpdating = false;
+            this.editingTrack = null;
+        },
+    },
 };
 </script>
 

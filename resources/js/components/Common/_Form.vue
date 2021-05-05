@@ -32,7 +32,7 @@
 <script>
 export default {
     name: "ui-form",
-    props: ["loading", "data", "id", "title"],
+    props: ["loading", "data", "title"],
     data() {
         return {
             ready: false,
